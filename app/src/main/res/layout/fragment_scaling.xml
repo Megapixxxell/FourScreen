@@ -1,13 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".fragments.scaling.ScalingFragment">
 
-    <TextView
+    <com.example.fourscreen.fragments.scaling.PinchZoomPan
+        android:id="@+id/iv_scale_image"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent" />
+
+    <ImageButton
+        android:id="@+id/btn_camera"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="10dp"
+        android:background="@color/colorAccent"
+        android:src="@drawable/ic_camera" />
+
+    <ImageButton
+        android:id="@+id/btn_gallery"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="10dp"
+        android:background="@color/colorAccent"
+        android:src="@drawable/ic_photo" />
+
+
 
 </FrameLayout>

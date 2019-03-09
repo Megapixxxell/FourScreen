@@ -29,7 +29,6 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
     private static final String CONTENT_TAG = "ContentList";
     private static final String PREFS_TAG = "MePreferences";
 
-
     MyAdapter.OnItemClickListener mListener;
     MyAdapter mAdapter;
     RecyclerView mRecyclerView;
@@ -43,40 +42,6 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
 
     FloatingActionButton mFab;
     private static int mPositionForChange = -1;
-
-
-    private void setDataToSharedPreferences(List<Content> contentList) {
-        String jsonCurProduct = mGson.toJson(contentList);
-        mEditor = mPreferences.edit();
-        mEditor.putString(CONTENT_TAG, jsonCurProduct);
-        mEditor.apply();
-    }
-
-    private List<Content> getContentList() {
-        mPreferences = getActivity().getSharedPreferences(PREFS_TAG, Context.MODE_PRIVATE);
-        String json = mPreferences.getString(CONTENT_TAG, "");
-        Type type = new TypeToken<List<Content>>() {
-        }.getType();
-
-        items = new ArrayList<>();
-        if (json == "") {
-            items.add(new Content("Horse Boy"));
-        } else items = mGson.fromJson(json, type);
-
-        if (mCurName != "" && mCurName != null) {
-            if (mPositionForChange == -1) {
-                items.add(new Content(mCurName));
-            } else {
-                Content content = items.get(mPositionForChange);
-                content.setItemName(mCurName);
-                items.set(mPositionForChange, content);
-                mPositionForChange = -1;
-            }
-        }
-        setDataToSharedPreferences(items);
-
-        return items;
-    }
 
     public ListFragment() {
     }
@@ -116,6 +81,39 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    private void setDataToSharedPreferences(List<Content> contentList) {
+        String jsonCurProduct = mGson.toJson(contentList);
+        mEditor = mPreferences.edit();
+        mEditor.putString(CONTENT_TAG, jsonCurProduct);
+        mEditor.apply();
+    }
+
+    private List<Content> getContentList() {
+        mPreferences = getActivity().getSharedPreferences(PREFS_TAG, Context.MODE_PRIVATE);
+        String json = mPreferences.getString(CONTENT_TAG, "");
+        Type type = new TypeToken<List<Content>>() {
+        }.getType();
+
+        items = new ArrayList<>();
+        if (json == "") {
+            items.add(new Content("Horse Boy"));
+        } else items = mGson.fromJson(json, type);
+
+        if (mCurName != "" && mCurName != null) {
+            if (mPositionForChange == -1) {
+                items.add(new Content(mCurName));
+            } else {
+                Content content = items.get(mPositionForChange);
+                content.setItemName(mCurName);
+                items.set(mPositionForChange, content);
+                mPositionForChange = -1;
+            }
+        }
+        setDataToSharedPreferences(items);
+
+        return items;
     }
 
     @Override
