@@ -2,6 +2,7 @@ package com.example.fourscreen.fragments.list.data;
 
 import com.example.fourscreen.R;
 
+//Модель элемента списка в виде класса
 public class Content {
 
     private String itemName;
@@ -27,16 +28,8 @@ public class Content {
         return firstPic;
     }
 
-    public void setFirstPic(int firstPic) {
-        this.firstPic = firstPic;
-    }
-
     public int getSecondPic() {
         return secondPic;
-    }
-
-    public void setSecondPic(int secondPic) {
-        this.secondPic = secondPic;
     }
 
     public boolean isCheckboxState() {

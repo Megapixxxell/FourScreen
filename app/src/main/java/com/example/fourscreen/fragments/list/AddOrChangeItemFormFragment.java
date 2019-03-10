@@ -11,12 +11,12 @@ import android.widget.EditText;
 
 import com.example.fourscreen.R;
 
+//Экран добавления и изменения элемента списка
 public class AddOrChangeItemFormFragment extends Fragment implements IOnBackPressed {
     private static final String ARG_NAME = "name";
 
     private String mName;
     private EditText mEtName;
-
 
     public AddOrChangeItemFormFragment() {
     }
@@ -64,13 +64,7 @@ public class AddOrChangeItemFormFragment extends Fragment implements IOnBackPres
         }
     };
 
-    View.OnClickListener onCancelClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            getFragmentManager().popBackStack();
-        }
-    };
-
+    View.OnClickListener onCancelClickListener = v -> getFragmentManager().popBackStack();
 
     @Override
     public boolean onBackPressed() {

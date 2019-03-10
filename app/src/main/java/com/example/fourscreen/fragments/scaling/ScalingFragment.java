@@ -31,7 +31,7 @@ public class ScalingFragment extends Fragment {
     public static final int RESULT_LOAD_IMAGE = 110;
     public static final int RESULT_TAKE_PICTURE = 111;
 
-    ImageButton mBtnCamera, mBtnGallery;
+    ImageButton mBtnCamera, mBtnGallery, mBtnZoomIn, mBtnZoomOut;
     View rootView;
     Bitmap mBitmap;
     protected PinchZoomPan mPinchZoomPan;
@@ -53,9 +53,14 @@ public class ScalingFragment extends Fragment {
         mPinchZoomPan = view.findViewById(R.id.iv_scale_image);
         mBtnCamera = view.findViewById(R.id.btn_camera);
         mBtnGallery = view.findViewById(R.id.btn_gallery);
+        mBtnZoomIn = view.findViewById(R.id.btn_zoom_in);
+        mBtnZoomOut = view.findViewById(R.id.btn_zoom_out);
         rootView = view.findViewById(R.id.frame_layout);
         askRequestPermissions();
 
+
+        mBtnZoomIn.setOnClickListener((v -> mPinchZoomPan.buttonZoomIn()));
+        mBtnZoomOut.setOnClickListener((v -> mPinchZoomPan.buttonZoomOut()));
         mBtnCamera.setOnClickListener(onCameraButtonClickListener);
         mBtnGallery.setOnClickListener(onGalleryButtonClickListener);
 
@@ -123,16 +128,13 @@ public class ScalingFragment extends Fragment {
 
     private void showNoPermissionSnackBar() {
         Snackbar.make(rootView, "Permissions is not granted", Snackbar.LENGTH_SHORT)
-                .setAction("SETTINGS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                Uri.parse("package:" + getActivity().getPackageName()));
-                        startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_CODE);
+                .setAction("SETTINGS", v -> {
+                    Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:" + getActivity().getPackageName()));
+                    startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_CODE);
 
-                        Toast.makeText(getActivity(), "Open Permission and grant Storage permissions",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getActivity(), "Open Permission and grant Storage permissions",
+                            Toast.LENGTH_SHORT).show();
                 })
                 .show();
     }
@@ -175,35 +177,24 @@ public class ScalingFragment extends Fragment {
                 ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ||
                 ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
             Snackbar.make(rootView, "Permissions need for application", Snackbar.LENGTH_LONG)
-                    .setAction("GRANT", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            askRequestPermissions();
-                        }
-                    })
+                    .setAction("GRANT", v -> askRequestPermissions())
                     .show();
         } else {
             askRequestPermissions();
         }
     }
 
-    View.OnClickListener onCameraButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (hasPermission()) {
-                Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(takePhotoIntent, RESULT_TAKE_PICTURE);
-            } else requestPermissionWithRationale();
-        }
+    View.OnClickListener onCameraButtonClickListener = v -> {
+        if (hasPermission()) {
+            Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(takePhotoIntent, RESULT_TAKE_PICTURE);
+        } else requestPermissionWithRationale();
     };
 
-    View.OnClickListener onGalleryButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (hasPermission()) {
-                Intent pickImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(pickImageIntent, RESULT_LOAD_IMAGE);
-            } else requestPermissionWithRationale();
-        }
+    View.OnClickListener onGalleryButtonClickListener = v -> {
+        if (hasPermission()) {
+            Intent pickImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(pickImageIntent, RESULT_LOAD_IMAGE);
+        } else requestPermissionWithRationale();
     };
 }

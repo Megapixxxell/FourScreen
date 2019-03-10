@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about">О нас</string>
+    <string name="back_off">Карта не может работать без доступа к местоположению</string>
+    <string name="cancel">Отмена</string>
+    <string name="delete">Удалить</string>
+    <string name="done">Принять</string>
+    <string name="edit">Изменить</string>
+    <string name="enter_name_here">Введите имя</string>
+    <string name="information">Информация</string>
+    <string name="list">Список</string>
+    <string name="map">Карта</string>
+    <string name="parsing">Парсинг</string>
+    <string name="permissions_request_message">Необходим доступ к вашему местоположению</string>
+    <string name="permissions_request_title">Внимание</string>
+    <string name="revert">Вернуться</string>
+    <string name="scaling">Масштабирование</string>
+    <string name="contacts">Контакты</string>
+</resources>

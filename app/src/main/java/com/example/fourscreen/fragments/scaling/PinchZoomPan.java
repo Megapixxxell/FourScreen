@@ -121,6 +121,9 @@ public class PinchZoomPan extends View {
             } else if ((mPositionY * -1) > mImageHeight * mScaleFactor - getHeight()) {
                 mPositionY = (mImageHeight * mScaleFactor - getHeight()) * -1;
             }
+
+            if ((mImageWidth * mScaleFactor) < getWidth()) {
+                mPositionX = (getWidth() - mImageWidth * mScaleFactor)/2; }
             if ((mImageHeight * mScaleFactor) < getHeight()) {
                 mPositionY = 0;
             }
@@ -132,12 +135,30 @@ public class PinchZoomPan extends View {
     }
 
     public void loadImageOnCanvas(Bitmap bitmap) {
+
+        //пропорции картинки
         float aspectRatio = (float) bitmap.getHeight() / (float) bitmap.getWidth();
+
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
+        //Задаем ширину картинки равную ширине экрана длину в соответствии с пропорциями изображения
         mImageWidth = displayMetrics.widthPixels;
         mImageHeight = Math.round(mImageWidth * aspectRatio);
         mBitmap = bitmap.createScaledBitmap(bitmap, mImageWidth, mImageHeight, false);
+
+        //redraw canvas call onDraw() method
+        invalidate();
+    }
+
+    public void buttonZoomIn () {
+        mScaleFactor += 0.5f;
+        mScaleFactor = Math.max(mMinZoom, Math.min(mScaleFactor, mMaxZoom));
+        invalidate();
+    }
+
+    public void buttonZoomOut () {
+        mScaleFactor -= 0.5f;
+        mScaleFactor = Math.max(mMinZoom, Math.min(mScaleFactor, mMaxZoom));
         invalidate();
     }
 
@@ -149,6 +170,7 @@ public class PinchZoomPan extends View {
             //don't to let the image get too large or small
             mScaleFactor = Math.max(mMinZoom, Math.min(mScaleFactor, mMaxZoom));
 
+            //redraw canvas call onDraw() method
             invalidate();
             return true;
         }

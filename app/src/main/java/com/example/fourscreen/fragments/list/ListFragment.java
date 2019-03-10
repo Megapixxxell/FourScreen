@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
@@ -57,7 +56,6 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mCurName = getArguments().getString(ARG_NAME);
             setArguments(null);
@@ -112,7 +110,6 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
             }
         }
         setDataToSharedPreferences(items);
-
         return items;
     }
 
@@ -121,28 +118,24 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
         PopupMenu popupMenu = new PopupMenu(getActivity(), v);
         popupMenu.inflate(R.menu.popupmenu);
 
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.edit_item:
-                        mPositionForChange = position;
+        popupMenu.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.edit_item:
+                    mPositionForChange = position;
 
-                        AddOrChangeItemFormFragment fragment = AddOrChangeItemFormFragment.newInstance(name);
+                    AddOrChangeItemFormFragment fragment = AddOrChangeItemFormFragment.newInstance(name);
 
-                        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
-                                .addToBackStack(fragment.getClass().getSimpleName()).commit();
-                        return true;
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+                            .addToBackStack(fragment.getClass().getSimpleName()).commit();
+                    return true;
 
-                    case R.id.delete_item:
-                        mAdapter.deleteItem(position);
-                        setDataToSharedPreferences(items);
-                        return true;
+                case R.id.delete_item:
+                    mAdapter.deleteItem(position);
+                    setDataToSharedPreferences(items);
+                    return true;
 
-                    default:
-                        return false;
-                }
-
+                default:
+                    return false;
             }
         });
         popupMenu.show();
@@ -161,13 +154,9 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
         mAdapter.swapPicture(i, isChecked);
     }
 
-    View.OnClickListener onFabClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            AddOrChangeItemFormFragment fragment = AddOrChangeItemFormFragment.newInstance("");
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
-                    .addToBackStack(fragment.getClass().getSimpleName()).commit();
-        }
+    View.OnClickListener onFabClickListener = view -> {
+        AddOrChangeItemFormFragment fragment = AddOrChangeItemFormFragment.newInstance("");
+        getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
+                .addToBackStack(fragment.getClass().getSimpleName()).commit();
     };
-
 }
