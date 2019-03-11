@@ -95,7 +95,7 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
         }.getType();
 
         items = new ArrayList<>();
-        if (json == "") {
+        if (json.equals("")) {
             items.add(new Content("Horse Boy"));
         } else items = mGson.fromJson(json, type);
 
@@ -109,6 +109,8 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
                 mPositionForChange = -1;
             }
         }
+        //исправление чтобы не добавлялось 2 элемента
+        mCurName = "";
         setDataToSharedPreferences(items);
         return items;
     }
@@ -151,6 +153,12 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
 
     @Override
     public void onCheckBoxClick(int i, boolean isChecked) {
+        //Сохранение состояния чекбоксов
+        Content content = items.get(i);
+        content.setCheckboxState(isChecked);
+        items.set(i, content);
+        setDataToSharedPreferences(items);
+
         mAdapter.swapPicture(i, isChecked);
     }
 

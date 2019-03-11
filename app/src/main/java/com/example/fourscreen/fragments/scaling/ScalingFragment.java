@@ -64,18 +64,23 @@ public class ScalingFragment extends Fragment {
         mBtnCamera.setOnClickListener(onCameraButtonClickListener);
         mBtnGallery.setOnClickListener(onGalleryButtonClickListener);
 
+        setRetainInstance(true);
+
         if (savedInstanceState != null) {
             mBitmap = savedInstanceState.getParcelable("Bitmap");
-            mPinchZoomPan.loadImageOnCanvas(mBitmap);
+            if (mBitmap != null) {
+                mPinchZoomPan.loadImageOnCanvas(mBitmap);
+            }
         }
-
         return view;
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("Bitmap", mBitmap);
+        if (mBitmap != null) {
+            outState.putParcelable("Bitmap", mBitmap);
+        }
     }
 
     private boolean hasPermission() {
