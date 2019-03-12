@@ -30,4 +30,5 @@
     <string name="russian_language" translatable="false">Русский</string>
     <string name="english_language" translatable="false">English</string>
     <string name="error">Error...</string>
+    <string name="need_perm_toast">Need some permission for this</string>
 </resources>

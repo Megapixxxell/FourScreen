@@ -64,8 +64,6 @@ public class ScalingFragment extends Fragment {
         mBtnCamera.setOnClickListener(onCameraButtonClickListener);
         mBtnGallery.setOnClickListener(onGalleryButtonClickListener);
 
-        setRetainInstance(true);
-
         if (savedInstanceState != null) {
             mBitmap = savedInstanceState.getParcelable("Bitmap");
             if (mBitmap != null) {
@@ -77,7 +75,9 @@ public class ScalingFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.clear();
         super.onSaveInstanceState(outState);
+
         if (mBitmap != null) {
             outState.putParcelable("Bitmap", mBitmap);
         }
@@ -118,17 +118,14 @@ public class ScalingFragment extends Fragment {
                 allowed = false;
                 break;
         }
-        if (allowed) {
-            Toast.makeText(getActivity(), "All permissions granted", Toast.LENGTH_SHORT).show();
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (shouldShowRequestPermissionRationale(curPerm[0])) {
-                    Toast.makeText(getActivity(), curPerm[0] + "Permission denied.", Toast.LENGTH_SHORT).show();
-                } else {
-                    showNoPermissionSnackBar();
-                }
+        if (!allowed && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (shouldShowRequestPermissionRationale(curPerm[0])) {
+                Toast.makeText(getActivity(), R.string.need_perm_toast, Toast.LENGTH_SHORT).show();
+            } else {
+                showNoPermissionSnackBar();
             }
         }
+
     }
 
     private void showNoPermissionSnackBar() {

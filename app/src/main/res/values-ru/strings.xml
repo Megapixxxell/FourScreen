@@ -16,4 +16,6 @@
     <string name="revert">Вернуться</string>
     <string name="scaling">Масштабирование</string>
     <string name="contacts">Контакты</string>
+    <string name="error" translatable="false">Ошибка</string>
+    <string name="need_perm_toast">Нужны разрешения для корректной работы</string>
 </resources>
