@@ -1,85 +1,113 @@
-package com.example.fourscreen.fragments.scaling;
+package com.example.fourscreen.fragments.scaling_v2;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.fourscreen.R;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 
 import static android.app.Activity.RESULT_OK;
 
-public class ScalingFragment extends Fragment {
+public class Scalingv2Fragment extends Fragment {
 
-    public static final int PERMISSION_REQUEST_CODE = 101;
-    public static final int RESULT_LOAD_IMAGE = 110;
-    public static final int RESULT_TAKE_PICTURE = 111;
+    private static final int PERMISSION_REQUEST_CODE = 101;
+    private static final int RESULT_LOAD_IMAGE = 110;
+    private static final int RESULT_TAKE_PICTURE = 111;
 
-    ImageButton mBtnCamera, mBtnGallery, mBtnZoomIn, mBtnZoomOut;
-    View rootView;
-    Bitmap mBitmap;
-    protected PinchZoomPan mPinchZoomPan;
+    private PhotoView mPhotoView;
+    private View rootView;
+    private float mScale = 1.0f;
+    Uri mUri;
 
-    String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    String imageFilePath;
+
+
+    private String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
-    public ScalingFragment() {
+    public Scalingv2Fragment() {
     }
 
-    public static ScalingFragment newInstance() {
-        return new ScalingFragment();
+    public static Scalingv2Fragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        Scalingv2Fragment fragment = new Scalingv2Fragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_scaling, container, false);
-        mPinchZoomPan = view.findViewById(R.id.iv_scale_image);
-        mBtnCamera = view.findViewById(R.id.btn_camera);
-        mBtnGallery = view.findViewById(R.id.btn_gallery);
-        mBtnZoomIn = view.findViewById(R.id.btn_zoom_in);
-        mBtnZoomOut = view.findViewById(R.id.btn_zoom_out);
-//        rootView = view.findViewById(R.id.frame_layout);
+        View view = inflater.inflate(R.layout.fr_scaling, container, false);
+        mPhotoView = view.findViewById(R.id.photoview_image);
+        ImageButton btnCamera = view.findViewById(R.id.camera);
+        ImageButton btnGallery = view.findViewById(R.id.gallery);
+        ImageButton btnZoomIn = view.findViewById(R.id.zoom_in);
+        ImageButton btnZoomOut = view.findViewById(R.id.zoom_out);
+        rootView = view.findViewById(R.id.frame);
         askRequestPermissions();
+        setRetainInstance(true);
 
+        mPhotoView.setMaximumScale(6);
+        mPhotoView.setMinimumScale(1);
 
-        mBtnZoomIn.setOnClickListener((v -> mPinchZoomPan.buttonZoomIn()));
-        mBtnZoomOut.setOnClickListener((v -> mPinchZoomPan.buttonZoomOut()));
-        mBtnCamera.setOnClickListener(onCameraButtonClickListener);
-        mBtnGallery.setOnClickListener(onGalleryButtonClickListener);
+        btnCamera.setOnClickListener(onCameraButtonClickListener);
+        btnGallery.setOnClickListener(onGalleryButtonClickListener);
+
+        btnZoomIn.setOnClickListener(v -> {
+            if (mScale < 6) mPhotoView.setScale(mScale += 1, true);
+        });
+
+        btnZoomOut.setOnClickListener(v -> {
+            if (mScale > 1) mPhotoView.setScale(mScale -= 1, true);
+        });
 
         if (savedInstanceState != null) {
-            mBitmap = savedInstanceState.getParcelable("Bitmap");
-            if (mBitmap != null) {
-                mPinchZoomPan.loadImageOnCanvas(mBitmap);
-            }
+            mUri = savedInstanceState.getParcelable("Uri");
+            Glide.with(getActivity()).load(mUri).into(mPhotoView);
+
         }
+
         return view;
     }
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.clear();
         super.onSaveInstanceState(outState);
 
-        if (mBitmap != null) {
-            outState.putParcelable("Bitmap", mBitmap);
+        if (mUri != null) {
+            outState.putParcelable("Uri", mUri);
         }
     }
 
@@ -149,29 +177,40 @@ public class ScalingFragment extends Fragment {
                 break;
             case RESULT_LOAD_IMAGE: {
                 if (resultCode == RESULT_OK && data != null) {
-                    Uri selectedImage = data.getData();
-                    Bitmap bitmap = null;
-                    try {
-                        bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), selectedImage);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    mBitmap = bitmap;
-                    mPinchZoomPan.loadImageOnCanvas(bitmap);
+                    mUri = data.getData();
+                    Glide.with(getActivity()).load(mUri).into(mPhotoView);
                 }
             }
             break;
             case RESULT_TAKE_PICTURE:
-                if (resultCode == RESULT_OK && data != null) {
-                    Bitmap bitmap;
-                    bitmap = (Bitmap) data.getExtras().get("data");
-                    mBitmap = bitmap;
-                    mPinchZoomPan.loadImageOnCanvas(bitmap);
+                if (resultCode == Activity.RESULT_OK) {
+                    Glide.with(getActivity()).load(imageFilePath).into(mPhotoView);
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    Toast.makeText(getActivity(), "oops...", Toast.LENGTH_SHORT).show();
                 }
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    private File createImageFile() throws IOException {
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss",
+                        Locale.getDefault()).format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir =
+                getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+
+        imageFilePath = image.getAbsolutePath();
+        return image;
+    }
+
 
     private void requestPermissionWithRationale() {
 
@@ -189,7 +228,23 @@ public class ScalingFragment extends Fragment {
     View.OnClickListener onCameraButtonClickListener = v -> {
         if (hasPermission()) {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(takePhotoIntent, RESULT_TAKE_PICTURE);
+            if (takePhotoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                //Create a file to store the image
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                }
+                if (photoFile != null) {
+                    mUri = FileProvider.getUriForFile(getActivity(),
+                            "com.example.fourscreen.fileprovider", photoFile);
+                    takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                            mUri);
+                    startActivityForResult(takePhotoIntent,
+                            RESULT_TAKE_PICTURE);
+                }
+            }
         } else requestPermissionWithRationale();
     };
 
@@ -199,4 +254,6 @@ public class ScalingFragment extends Fragment {
             startActivityForResult(pickImageIntent, RESULT_LOAD_IMAGE);
         } else requestPermissionWithRationale();
     };
+
+
 }

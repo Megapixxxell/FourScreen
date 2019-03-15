@@ -7,34 +7,35 @@
 
 
     <ImageView
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center"
         android:id="@+id/iv_about_pic"
         android:layout_width="200dp"
         android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         app:srcCompat="@drawable/for_launch_screen" />
 
     <TextView
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="@string/contacts"
         android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="@string/tel_about"
         android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="@string/mail_about"
         android:textSize="15sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
 </LinearLayout>

@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/frame_layout"
+    android:id="@+id/frame"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".fragments.scaling.ScalingFragment">
 
-    <com.example.fourscreen.fragments.scaling.PinchZoomPan
-        android:id="@+id/iv_scale_image"
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/photoview_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ImageButton
-        android:id="@+id/btn_zoom_in"
+        android:id="@+id/zoom_in"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|start"
-        android:layout_marginBottom="70dp"
         android:layout_marginStart="10dp"
+        android:layout_marginBottom="70dp"
         android:background="@color/colorAccent"
         android:src="@drawable/ic_zoom_in" />
 
     <ImageButton
-        android:id="@+id/btn_zoom_out"
+        android:id="@+id/zoom_out"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|start"
-        android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/colorAccent"
         android:src="@drawable/ic_zoom_out" />
 
     <ImageButton
-        android:id="@+id/btn_camera"
+        android:id="@+id/camera"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|center"
@@ -42,14 +42,12 @@
         android:src="@drawable/ic_camera" />
 
     <ImageButton
-        android:id="@+id/btn_gallery"
+        android:id="@+id/gallery"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
         android:background="@color/colorAccent"
         android:src="@drawable/ic_photo" />
-
-
 
 </FrameLayout>
