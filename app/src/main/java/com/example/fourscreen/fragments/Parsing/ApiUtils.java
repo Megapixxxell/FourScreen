@@ -15,7 +15,7 @@ public class ApiUtils {
     private static Gson sGson;
     private static ZennexApi sApi;
 
-    public static OkHttpClient getBasicClient() {
+    private static OkHttpClient getBasicClient() {
         if (sHttpClient == null) {
             OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
             if (!BuildConfig.BUILD_TYPE.contains("release")) {

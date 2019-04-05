@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
         mPreferences = getSharedPreferences("selectedLanguage", Context.MODE_PRIVATE);
         mEditor = mPreferences.edit();
         mEditor.putString("language", language);
-        mEditor.commit();
+        mEditor.apply();
         setMyLocale();
     }
 

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,10 +43,8 @@ public class Scalingv2Fragment extends Fragment {
     private PhotoView mPhotoView;
     private View rootView;
     private float mScale = 1.0f;
-    Uri mUri;
-
-    String imageFilePath;
-
+    private Uri mUri;
+    private String imageFilePath;
 
     private String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
@@ -58,7 +55,6 @@ public class Scalingv2Fragment extends Fragment {
     public static Scalingv2Fragment newInstance() {
 
         Bundle args = new Bundle();
-
         Scalingv2Fragment fragment = new Scalingv2Fragment();
         fragment.setArguments(args);
         return fragment;
@@ -94,12 +90,9 @@ public class Scalingv2Fragment extends Fragment {
         if (savedInstanceState != null) {
             mUri = savedInstanceState.getParcelable("Uri");
             Glide.with(getActivity()).load(mUri).into(mPhotoView);
-
         }
-
         return view;
     }
-
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -153,7 +146,6 @@ public class Scalingv2Fragment extends Fragment {
                 showNoPermissionSnackBar();
             }
         }
-
     }
 
     private void showNoPermissionSnackBar() {
@@ -162,7 +154,6 @@ public class Scalingv2Fragment extends Fragment {
                     Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
                             Uri.parse("package:" + getActivity().getPackageName()));
                     startActivityForResult(appSettingsIntent, PERMISSION_REQUEST_CODE);
-
                     Toast.makeText(getActivity(), "Open Permission and grant Storage permissions",
                             Toast.LENGTH_SHORT).show();
                 })
@@ -225,7 +216,7 @@ public class Scalingv2Fragment extends Fragment {
         }
     }
 
-    View.OnClickListener onCameraButtonClickListener = v -> {
+    private View.OnClickListener onCameraButtonClickListener = v -> {
         if (hasPermission()) {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             if (takePhotoIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -248,12 +239,10 @@ public class Scalingv2Fragment extends Fragment {
         } else requestPermissionWithRationale();
     };
 
-    View.OnClickListener onGalleryButtonClickListener = v -> {
+    private View.OnClickListener onGalleryButtonClickListener = v -> {
         if (hasPermission()) {
             Intent pickImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(pickImageIntent, RESULT_LOAD_IMAGE);
         } else requestPermissionWithRationale();
     };
-
-
 }

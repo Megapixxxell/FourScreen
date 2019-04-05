@@ -28,18 +28,14 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
     private static final String CONTENT_TAG = "ContentList";
     private static final String PREFS_TAG = "MePreferences";
 
-    MyAdapter.OnItemClickListener mListener;
-    MyAdapter mAdapter;
-    RecyclerView mRecyclerView;
-    List<Content> items;
+    private MyAdapter mAdapter;
+    private List<Content> items;
 
-    Gson mGson = new Gson();
-    static SharedPreferences mPreferences;
-    static SharedPreferences.Editor mEditor;
+    private Gson mGson = new Gson();
+    private static SharedPreferences mPreferences;
 
     private String mCurName;
 
-    FloatingActionButton mFab;
     private static int mPositionForChange = -1;
 
     public ListFragment() {
@@ -66,26 +62,26 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
-        mFab = view.findViewById(R.id.fab);
-        mFab.setOnClickListener(onFabClickListener);
-        mRecyclerView = view.findViewById(R.id.list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(onFabClickListener);
+        RecyclerView recyclerView = view.findViewById(R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new MyAdapter(this, getContentList());
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(mAdapter);
         return view;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        MyAdapter.OnItemClickListener listener = null;
     }
 
     private void setDataToSharedPreferences(List<Content> contentList) {
         String jsonCurProduct = mGson.toJson(contentList);
-        mEditor = mPreferences.edit();
-        mEditor.putString(CONTENT_TAG, jsonCurProduct);
-        mEditor.apply();
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putString(CONTENT_TAG, jsonCurProduct);
+        editor.apply();
     }
 
     private List<Content> getContentList() {
@@ -162,7 +158,7 @@ public class ListFragment extends Fragment implements MyAdapter.OnItemClickListe
         mAdapter.swapPicture(i, isChecked);
     }
 
-    View.OnClickListener onFabClickListener = view -> {
+    private View.OnClickListener onFabClickListener = view -> {
         AddOrChangeItemFormFragment fragment = AddOrChangeItemFormFragment.newInstance("");
         getFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment)
                 .addToBackStack(fragment.getClass().getSimpleName()).commit();

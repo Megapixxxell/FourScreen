@@ -21,7 +21,7 @@ public class AddOrChangeItemFormFragment extends Fragment implements IOnBackPres
     public AddOrChangeItemFormFragment() {
     }
 
-    public static AddOrChangeItemFormFragment newInstance(String name) {
+    static AddOrChangeItemFormFragment newInstance(String name) {
         AddOrChangeItemFormFragment fragment = new AddOrChangeItemFormFragment();
         Bundle args = new Bundle();
         args.putString(ARG_NAME, name);
@@ -50,7 +50,7 @@ public class AddOrChangeItemFormFragment extends Fragment implements IOnBackPres
         return v;
     }
 
-    View.OnClickListener onDoneClickListener = new View.OnClickListener() {
+    private View.OnClickListener onDoneClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             if (mEtName.getText().length() == 0) {
@@ -64,7 +64,7 @@ public class AddOrChangeItemFormFragment extends Fragment implements IOnBackPres
         }
     };
 
-    View.OnClickListener onCancelClickListener = v -> getFragmentManager().popBackStack();
+    private View.OnClickListener onCancelClickListener = v -> getFragmentManager().popBackStack();
 
     @Override
     public boolean onBackPressed() {

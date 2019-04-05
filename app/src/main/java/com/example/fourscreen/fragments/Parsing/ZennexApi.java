@@ -9,5 +9,4 @@ public interface ZennexApi {
 
     @GET("quotes?sort=time")
     Single<QuoteResponse> getQuotes();
-
 }

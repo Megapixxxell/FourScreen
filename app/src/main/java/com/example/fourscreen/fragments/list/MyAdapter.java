@@ -89,19 +89,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
         }
 
         void setClickListener(final MyAdapter.OnItemClickListener onItemClickListener, final int i) {
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    onItemClickListener.onLongItemClick(i, itemView, mTvName.getText().toString());
-                    return true;
-                }
+            itemView.setOnLongClickListener(v -> {
+                onItemClickListener.onLongItemClick(i, itemView, mTvName.getText().toString());
+                return true;
             });
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onItemClickListener.onItemClick(i, mTvName.getText().toString());
-                }
-            });
+            itemView.setOnClickListener(v -> onItemClickListener.onItemClick(i, mTvName.getText().toString()));
         }
 
         @Override

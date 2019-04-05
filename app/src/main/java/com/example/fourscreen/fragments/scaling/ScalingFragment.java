@@ -27,23 +27,18 @@ import static android.app.Activity.RESULT_OK;
 
 public class ScalingFragment extends Fragment {
 
-    public static final int PERMISSION_REQUEST_CODE = 101;
-    public static final int RESULT_LOAD_IMAGE = 110;
-    public static final int RESULT_TAKE_PICTURE = 111;
+    private static final int PERMISSION_REQUEST_CODE = 101;
+    private static final int RESULT_LOAD_IMAGE = 110;
+    private static final int RESULT_TAKE_PICTURE = 111;
 
-    ImageButton mBtnCamera, mBtnGallery, mBtnZoomIn, mBtnZoomOut;
-    View rootView;
-    Bitmap mBitmap;
-    protected PinchZoomPan mPinchZoomPan;
+    private View rootView;
+    private Bitmap mBitmap;
+    private PinchZoomPan mPinchZoomPan;
 
-    String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    private String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
 
     public ScalingFragment() {
-    }
-
-    public static ScalingFragment newInstance() {
-        return new ScalingFragment();
     }
 
     @Override
@@ -51,18 +46,18 @@ public class ScalingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scaling, container, false);
         mPinchZoomPan = view.findViewById(R.id.iv_scale_image);
-        mBtnCamera = view.findViewById(R.id.btn_camera);
-        mBtnGallery = view.findViewById(R.id.btn_gallery);
-        mBtnZoomIn = view.findViewById(R.id.btn_zoom_in);
-        mBtnZoomOut = view.findViewById(R.id.btn_zoom_out);
+        ImageButton btnCamera = view.findViewById(R.id.btn_camera);
+        ImageButton btnGallery = view.findViewById(R.id.btn_gallery);
+        ImageButton btnZoomIn = view.findViewById(R.id.btn_zoom_in);
+        ImageButton btnZoomOut = view.findViewById(R.id.btn_zoom_out);
 //        rootView = view.findViewById(R.id.frame_layout);
         askRequestPermissions();
 
 
-        mBtnZoomIn.setOnClickListener((v -> mPinchZoomPan.buttonZoomIn()));
-        mBtnZoomOut.setOnClickListener((v -> mPinchZoomPan.buttonZoomOut()));
-        mBtnCamera.setOnClickListener(onCameraButtonClickListener);
-        mBtnGallery.setOnClickListener(onGalleryButtonClickListener);
+        btnZoomIn.setOnClickListener((v -> mPinchZoomPan.buttonZoomIn()));
+        btnZoomOut.setOnClickListener((v -> mPinchZoomPan.buttonZoomOut()));
+        btnCamera.setOnClickListener(onCameraButtonClickListener);
+        btnGallery.setOnClickListener(onGalleryButtonClickListener);
 
         if (savedInstanceState != null) {
             mBitmap = savedInstanceState.getParcelable("Bitmap");
@@ -125,7 +120,6 @@ public class ScalingFragment extends Fragment {
                 showNoPermissionSnackBar();
             }
         }
-
     }
 
     private void showNoPermissionSnackBar() {
@@ -186,14 +180,14 @@ public class ScalingFragment extends Fragment {
         }
     }
 
-    View.OnClickListener onCameraButtonClickListener = v -> {
+    private View.OnClickListener onCameraButtonClickListener = v -> {
         if (hasPermission()) {
             Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             startActivityForResult(takePhotoIntent, RESULT_TAKE_PICTURE);
         } else requestPermissionWithRationale();
     };
 
-    View.OnClickListener onGalleryButtonClickListener = v -> {
+    private View.OnClickListener onGalleryButtonClickListener = v -> {
         if (hasPermission()) {
             Intent pickImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(pickImageIntent, RESULT_LOAD_IMAGE);

@@ -23,7 +23,7 @@ import static android.content.pm.PackageManager.PERMISSION_DENIED;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static final int REQUEST_LOCATION_STORAGE = 120;
-    MapView mMapView;
+    private MapView mMapView;
 
     public MapFragment() {
     }
